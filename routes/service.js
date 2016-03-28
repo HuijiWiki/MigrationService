@@ -108,7 +108,7 @@ router.post('/smp', function(req,res){
  
     sm.installHuijiPackage(fromDomain, targetDomain, skeletonName,function(err, result){
      if(err){
-	logger.error(__filename + "# Fail to install huiji package, reason: " + JSON.stringify(err) + ".");
+	logger.error(__filename + "# Fail to install huiji package, reason: " + err.toString() + ".");
       res.send({err: JSON.stringify(err),
 		status:"fail" });
      }else{
