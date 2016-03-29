@@ -67,36 +67,45 @@ router.post('/pm', function(req,res){
 });
 
 
+/**
+ * Node.js based skeleton crawler and editor service endpoint
+ * Function: to migrate main wikipages from wikia to huiji
+ * usage query: www.huiji.wiki:PORT/mm?fromDomain=xxx.wikia.com&targetDomain=xxx.huiji.wiki
+ * fromDomain: the domain where to copy main page
+ * targetDomain: the domain to copy the sketeon from
+ */
+
 router.post('/mm', function(req,res){
   var fromDomain = req.query.fromDomain;
   var targetDomain   = req.query.targetDomain;
 
   if( fromDomain == undefined || targetDomain == undefined ){
-    res.send('Parameter Undefined Error');
+    res.send({status:'fail',err:'Parameter Undefined Error'});
     return;
   }
 
   pm.migrateMainPage(fromDomain, targetDomain, function(err, result){
     if(err){
-      res.send(err);
+      res.send({status:'fail',err:err.toString()});
     }
     else{
-      res.send('Main Page Migrate Sucess');
+      res.send({status:'success',result:'Main Page Migrate Sucess'});
     }
   });
 
 });
-/**
-* Node.js based skeleton crawler and eidtor service endpoint
-* 
-* Sample usage query: huiji.wiki:PORT/sm(p/n)?fromSkeletonWbsite=xxx.wikia.com&toSkeletonWebsite=test.huiji.wiki&skeleton=Mediawiki:
-* Parameter Required: 
-*   fromDomain: the domain where to copy the skeleton from
-*   targetDomain: the domain to copy the template to
-*   skeletonName: the name for the skeleton.
-*       eg. For navigation bar of a wikia website, the skeleton name will be : Mediawiki:wiki-navigation
-*           For huiji.wiki based website, the skeleton is managed under Manifesto  namespace. 
-*/
+
+ /**
+ * Node.js based skeleton crawler and eidtor service endpoint
+ * 
+ * Sample usage query: huiji.wiki:PORT/sm(p/n)?fromSkeletonWbsite=xxx.wikia.com&toSkeletonWebsite=test.huiji.wiki&skeleton=Mediawiki:
+ * Parameter Required: 
+ *   fromDomain: the domain where to copy the skeleton from
+ *   targetDomain: the domain to copy the template to
+ *   skeletonName: the name for the skeleton.
+ *       eg. For navigation bar of a wikia website, the skeleton name will be : Mediawiki:wiki-navigation
+ *           For huiji.wiki based website, the skeleton is managed under Manifesto  namespace. 
+ */
 
 router.post('/smp', function(req,res){ 
   logger.info("Request: " + req.originalUrl);
@@ -109,12 +118,12 @@ router.post('/smp', function(req,res){
     sm.installHuijiPackage(fromDomain, targetDomain, skeletonName,function(err, result){
      if(err){
 	logger.error(__filename + "# Fail to install huiji package, reason: " + err.toString() + ".");
-      res.send({err: JSON.stringify(err),
+      res.send({err: err.toString(),
 		status:"fail" });
      }else{
 	logger.info(__filename + "# Success to install huiji package to wikisite: " + targetDomain);
        res.send({status: "success",
-		 result: "0"});
+		 result: "Migrate huiji templates successfully"});
      }
     });
 });

@@ -24,8 +24,8 @@ module.exports = {
 
 		client.logIn(config.bot.name, config.bot.pwd, function(err,result){
         	if(err){
-			logger.error(__filename + "# fail to register editor client bot in huiji.wiki");
-        		callback(err);
+			logger.error(__filename + "# fail to register editor client bot in huiji.wiki, reason: " + err.toString() );
+        		callback(err.toString());
         	}
         	else{
 			logger.info(__filename + "# success to register editor client bot in huiji.wiki");
@@ -69,7 +69,9 @@ module.exports = {
 					    logger.warn(__filename + '# fail: ' + failNum + ' , success: ' + (editDone - failNum) + ' articles');
 					}
   					callback(errArray, 'SUCCESS');
-  				}
+  				}else{
+				  console.log(contentList.length + " ---  " + editDone);
+				}
   			}.bind({name:pageName}));
   		};
 
