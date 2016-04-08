@@ -1,6 +1,6 @@
 var express = require('express');
 var crypto = require('crypto')
-var bot = require('nodemw');
+//var bot = require('nodemw');
 var config = require('../config');
 var cookies =  require('cookies');
 var router = express.Router();
@@ -12,11 +12,67 @@ var logger = log4jsM.outLogger;
 var pm = require('./pagemigrator');
 var sm = require('./skeletonmigrator');
 
+var bot  = require('../huijiBOT/bot');
 
 
 /**
 * TODO: Add authentication middleware 
 */
+
+router.post('/t', function(req,res){
+
+	var cb = function(err , result){
+		if(err){
+			res.send(err);
+		}else{
+			res.send(result);
+		}
+	};
+	
+		
+
+	var client = new bot({
+			siteDomain: 'zhang01.huiji.wiki',
+			path: '/'
+		   });
+	
+//	client.login(config.bot.name,config.bot.pwd,cb);
+	
+//	client.edit("首页","dfdf","","993129e7cb075f61345028874eef269d56fe7487",cb);
+	client.getToken(cb);
+	
+
+
+});
+
+
+router.post('/s', function(req,res){
+
+        var cb = function(err , result){
+                if(err){
+                        res.send(err);
+                }else{
+                        res.send(result);
+                }
+        };
+
+
+
+        var client = new bot({
+                        siteDomain: 'zhang01.huiji.wiki',
+                        path: '/'
+                   });
+
+      client.login(config.bot.name,config.bot.pwd,cb);
+
+//      client.edit("首页","dfdf","","993129e7cb075f61345028874eef269d56fe7487",cb);
+//        client.getToken(cb);
+
+
+
+});
+
+
 
 
 /**
@@ -45,6 +101,7 @@ var sm = require('./skeletonmigrator');
 *   SUCCUSS, if all the process completed
 *   Errors defined above if any procedure encounters an error. 
 **/
+
 
 router.post('/pm', function(req,res){
   var page       = req.query.page;
@@ -80,16 +137,16 @@ router.post('/mm', function(req,res){
   var targetDomain   = req.query.targetDomain;
 
   if( fromDomain == undefined || targetDomain == undefined ){
-    res.send({status:'fail',err:'Parameter Undefined Error'});
+    res.send({status:'fail',message:'Parameter Undefined Error'});
     return;
   }
 
   pm.migrateMainPage(fromDomain, targetDomain, function(err, result){
     if(err){
-      res.send({status:'fail',err:err.toString()});
+      res.send({status:'fail',message:err.toString()});
     }
     else{
-      res.send({status:'success',result:'Main Page Migrate Sucess'});
+      res.send({status:'success',message:'Main Page Migrate Sucess'});
     }
   });
 
@@ -118,12 +175,12 @@ router.post('/smp', function(req,res){
     sm.installHuijiPackage(fromDomain, targetDomain, skeletonName,function(err, result){
      if(err){
 	logger.error(__filename + "# Fail to install huiji package, reason: " + err.toString() + ".");
-      res.send({err: err.toString(),
+      res.send({message: err.toString(),
 		status:"fail" });
      }else{
 	logger.info(__filename + "# Success to install huiji package to wikisite: " + targetDomain);
        res.send({status: "success",
-		 result: "Migrate huiji templates successfully"});
+		 message: "Migrate huiji templates successfully"});
      }
     });
 });
