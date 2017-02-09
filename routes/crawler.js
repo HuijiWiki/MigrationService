@@ -108,6 +108,7 @@ function getArticleListContent(articleList, mwDomain, callback){
 			//callback(err);
 		}
       		workDone++;
+
       		ret.push({ARTICLE: this.name, VALUE: result});
       		if(workDone == articleList.length){
         		console.timeEnd('content crawling');

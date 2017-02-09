@@ -69,6 +69,7 @@ module.exports = {
 				}
 			], function(err, result){
 				if(err){
+					console(err);
 					mpCallback(err);
 				}
 				else{

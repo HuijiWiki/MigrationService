@@ -55,7 +55,7 @@ module.exports = {
 				callback(err);
 			}
 			else{
-				console.log(result);
+				//console.log(result);
 				var names = module.exports.getPageNames(result);
 				callback(null, names);
 				

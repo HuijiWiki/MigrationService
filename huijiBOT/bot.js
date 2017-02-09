@@ -101,11 +101,13 @@ module.exports = (function() {
 			};
 
 			
-			//console.log(token);
+//			console.log(content);
 			httpRequest('POST', data, self.url, function(err, result){
 				if(err){ 
+//					console.log(err);
 					editCallback(err);
 				}else{ 
+					console.log("[[[["+result+"]]]]]");
 					editCallback(null, result);
 				}
 			});
@@ -114,10 +116,10 @@ module.exports = (function() {
 
 		edit: function(title, content, summary, editCallback){
 			var self = this;
-			if(self.token == null){
-				editCallback("Not logged in.");
-				return;
-			}
+		//	if(self.token == null){
+		//		editCallback("Not logged in.");
+		//		return;
+		//	}
 			
 			async.waterfall(
                                 [
